@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+    version="2.4">
+
+    <display-name>Lab1 Task 1</display-name>
+    <description>
+	This is the task 1 of SER 422 Lab 1
+	includes the servlets: newperson and getpersons
+    </description>
+
+    <servlet>
+        <servlet-name>NewPerson</servlet-name>
+        <servlet-class>NewPerson</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>NewPerson</servlet-name>
+        <url-pattern>/newperson</url-pattern>
+    </servlet-mapping>
+	
+	<servlet>
+		<servlet-name>GetPersons</servlet-name>
+		<servlet-class>GetPersons</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>GetPersons</servlet-name>
+		<url-pattern>/getpersons</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>Root</servlet-name>
+		<servlet-class>Root</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Root</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+	<error-page>
+		<error-code>404</error-code>
+		<location>/error.html</location>
+	</error-page>
+
+</web-app>
+

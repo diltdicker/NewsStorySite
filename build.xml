@@ -1,0 +1,86 @@
+<project name="Lab1 SER 422" default="instructions" basedir=".">
+	<property name="src.one" value="./lab2task1/WEB_INF/src"/>
+	<property name="src.two" value="./lab2task2/WEB_INF/src"/>
+	<property name="dest.one" value="./lab2task1/WEB_INF/classes"/>
+	<property name="dest.two" value="./lab2task2/WEB_INF/classes"/>
+	<property name="lib.one" value="./lab2task1/WEB_INF/lib"/>
+	<property name="lib.two" value="./lab2task2/WEB_INF/lib"/>
+	<property name="extern.lib" value="./External_libs"/>
+	<property name="task1" value="./lab2task1"/>
+	<property name="task2" value="./lab2task2"/>
+	<target name="instructions">
+		<echo>options:</echo>
+		<echo>build-task1, build-task2</echo>
+		<echo>war-task1, war-task2</echo>
+		<echo>clean-task1, clean-task2</echo>
+	</target>
+	<target name="build-task1">
+		<mkdir dir="${dest.one}"/>
+		<mkdir dir="${lib.one}"/>
+		<javac includeantruntime="false" srcdir="${src.one}" destdir="${dest.one}">
+			<classpath>
+        		<fileset dir="${lib.one}" includes="*.jar"/>
+        		<fileset dir="${extern.lib}" includes="*.jar"/>
+        		<pathelement path="${dest.one}" />
+			</classpath>
+		</javac>
+	</target>
+	<target name="build-task2">
+		<mkdir dir="${dest.two}"/>
+		<javac includeantruntime="false" srcdir="${src.two}" destdir="${dest.two}">
+			<classpath>
+                <fileset dir="${lib.two}" includes="*.jar"/>
+                <fileset dir="${extern.lib}" includes="*.jar"/>
+                <pathelement path="${dest.two}"/>
+            </classpath>
+        </javac>
+	</target>
+	<target name="war-task1" depends="build-task1">
+		<mkdir dir="temp"/>
+		<copydir dest="temp" src="${task1}"/>
+		<war basedir="temp" destfile="task1.war" webxml="task1.xml">
+        	<exclude name="WEB_INF/**"/>
+			<webinf dir="temp/WEB_INF/">
+            	<include name="**/*.jar" />
+				<include name="classes/**"/>
+        	</webinf>
+    	</war>
+		<delete includeEmptyDirs="true">
+			<fileset dir="temp"/>
+		</delete>
+	</target>
+	<target name="war-task2" depends="build-task2">
+		<mkdir dir="temp"/>
+        <copydir dest="temp" src="${task2}"/>
+        <war basedir="temp" destfile="task2.war" webxml="task2.xml">
+            <exclude name="WEB_INF/**"/>
+            <webinf dir="temp/WEB_INF/">
+                <include name="**/*.jar" />
+                <include name="classes/**"/>
+            </webinf>
+        </war>
+        <delete includeEmptyDirs="true">
+            <fileset dir="temp"/>
+        </delete>
+	</target>
+	<target name="clean-task1">
+		<delete includeEmptyDirs="true">
+			<fileset dir="${dest.one}"/>
+		</delete>
+		<delete file="task1.war"/>
+	</target>
+	<target name="clean-task2">
+		<delete includeEmptyDirs="true">
+			<fileset dir="${dest.two}"/>
+		</delete>
+		<delete file="task2.war"/>
+	</target>
+	<target name="test">
+		<java classname="Test">
+			<classpath>
+				<fileset dir="${lib.one}" includes="*.jar"/>
+				<pathelement path="${dest.one}"/>
+			</classpath>
+		</java>
+	</target>
+</project>

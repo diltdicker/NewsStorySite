@@ -55,7 +55,7 @@ public class Controller extends HttpServlet {
         }
         switch (pageFlag) {
             case "":           // home page
-                handle = Page.INDEX;
+                handle = Page.ERROR;
                 res.setStatus(405);
                 break;
             case "login":           // login page

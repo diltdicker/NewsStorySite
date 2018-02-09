@@ -1,86 +1,110 @@
-<project name="Lab1 SER 422" default="instructions" basedir=".">
-	<property name="src.one" value="./lab2task1/WEB_INF/src"/>
-	<property name="src.two" value="./lab2task2/WEB_INF/src"/>
-	<property name="dest.one" value="./lab2task1/WEB_INF/classes"/>
-	<property name="dest.two" value="./lab2task2/WEB_INF/classes"/>
-	<property name="lib.one" value="./lab2task1/WEB_INF/lib"/>
-	<property name="lib.two" value="./lab2task2/WEB_INF/lib"/>
-	<property name="extern.lib" value="./External_libs"/>
-	<property name="task1" value="./lab2task1"/>
-	<property name="task2" value="./lab2task2"/>
-	<target name="instructions">
-		<echo>options:</echo>
-		<echo>build-task1, build-task2</echo>
-		<echo>war-task1, war-task2</echo>
-		<echo>clean-task1, clean-task2</echo>
-	</target>
-	<target name="build-task1">
-		<mkdir dir="${dest.one}"/>
-		<mkdir dir="${lib.one}"/>
-		<javac includeantruntime="false" srcdir="${src.one}" destdir="${dest.one}">
+<!--
+   Example build.xml file for SER422 Spring 2015.
+   Copyright 2015 Kevin A. Gary
+   This build.xml does most of the things asked of you in the
+   submission guidelines document. However, you may need to 
+   customize actions for these targets per each lab's
+   particular submission requirements, so please take the time
+   to understand how this works!
+-->
+
+<project name="SER 422 Lab 2" default="compile" basedir=".">
+  <property file="build.properties"/>
+
+  <!-- init target makes the directory structure. You may not
+       require this if you set your environment up by hand. -->
+  <target name="init">
+    <tstamp/>
+    <mkdir dir="${app1.name}/${classes.dir}"/>
+	<mkdir dir="${app2.name}/${classes.dir}"/>
+  </target>
+
+  <!-- Compiles your java files and puts the classes in classes.dir -->
+  <target name="compileTask1" depends="init">
+    <javac
+      srcdir="${app1.name}/${src.dir}"
+      destdir="${app1.name}/${classes.dir}">
+      <!-- Make sure you set your classpath! -->
+      <classpath>
+        <fileset dir="${tomcat.home}/lib" includes="servlet-api.jar"/>
+      	<fileset dir="${app1.name}$/{lib.dir}" includes="*.jar"/>
+        <pathelement path="${app1.name}/${classes.dir}" />
+      </classpath>
+    </javac>
+  </target>
+
+	<target name="compileTask2" depends="init">
+		<javac
+			srcdir="${app2.name}/${src.dir}"
+			destdir="${app2.name}/${classes.dir}">
 			<classpath>
-        		<fileset dir="${lib.one}" includes="*.jar"/>
-        		<fileset dir="${extern.lib}" includes="*.jar"/>
-        		<pathelement path="${dest.one}" />
+				<fileset dir="${tomcat.home}/lib" includes="servlet-api.jar"/>
+				<fileset dir="${app2.name}/${lib.dir}" includes="*.jar"/>
+				<pathelement path="${app2.name}/${classes.dir}"/>
 			</classpath>
 		</javac>
 	</target>
-	<target name="build-task2">
-		<mkdir dir="${dest.two}"/>
-		<javac includeantruntime="false" srcdir="${src.two}" destdir="${dest.two}">
-			<classpath>
-                <fileset dir="${lib.two}" includes="*.jar"/>
-                <fileset dir="${extern.lib}" includes="*.jar"/>
-                <pathelement path="${dest.two}"/>
-            </classpath>
-        </javac>
+
+  <!-- The deploy target will be highly dependent on your deployed app.
+       For example, if you are building a web-app, you should include
+       commands to copy files over to your deploy directory according
+       to the servlet specification, or create a .war file (via dist)
+       and copy it over. If you are creating a standalone app (like this
+       example does), you can create it in a given directory, or create
+       your dist jar first that can be run using java -jar. -->
+  <target name="deploy" depends="dist">
+    <copy file="${dist.jar}" todir="${tomcat.home}/webapps" overwrite="yes"/>
+  </target>
+
+	<target name="deployTask1" depends="distTask1">
+		<copy file="${dist1.jar}" todir="${tomcat1.home}/webapps" overwrite="yes"/>
+		<copy file="${dist2.jar}" todir="${tomcat2.home}/webapps" overwrite="yes"/>
 	</target>
-	<target name="war-task1" depends="build-task1">
-		<mkdir dir="temp"/>
-		<copydir dest="temp" src="${task1}"/>
-		<war basedir="temp" destfile="task1.war" webxml="task1.xml">
-        	<exclude name="WEB_INF/**"/>
-			<webinf dir="temp/WEB_INF/">
-            	<include name="**/*.jar" />
-				<include name="classes/**"/>
-        	</webinf>
-    	</war>
-		<delete includeEmptyDirs="true">
-			<fileset dir="temp"/>
-		</delete>
-	</target>
-	<target name="war-task2" depends="build-task2">
-		<mkdir dir="temp"/>
-        <copydir dest="temp" src="${task2}"/>
-        <war basedir="temp" destfile="task2.war" webxml="task2.xml">
-            <exclude name="WEB_INF/**"/>
-            <webinf dir="temp/WEB_INF/">
-                <include name="**/*.jar" />
-                <include name="classes/**"/>
-            </webinf>
-        </war>
-        <delete includeEmptyDirs="true">
-            <fileset dir="temp"/>
-        </delete>
-	</target>
-	<target name="clean-task1">
-		<delete includeEmptyDirs="true">
-			<fileset dir="${dest.one}"/>
-		</delete>
-		<delete file="task1.war"/>
-	</target>
-	<target name="clean-task2">
-		<delete includeEmptyDirs="true">
-			<fileset dir="${dest.two}"/>
-		</delete>
-		<delete file="task2.war"/>
-	</target>
-	<target name="test">
-		<java classname="Test">
-			<classpath>
-				<fileset dir="${lib.one}" includes="*.jar"/>
-				<pathelement path="${dest.one}"/>
-			</classpath>
-		</java>
-	</target>
+      
+  <target name="buildTask2" depends="compile">
+    <mkdir dir="${build.home}"/>
+    <mkdir dir="${build.home}/WEB-INF"/>
+    <copy todir="${build.home}/WEB-INF">
+      <fileset dir="." includes="${classes.dir}/**,${lib.dir}/**"/>
+    </copy>
+    <copy todir="${build.home}/WEB-INF/${classes.dir}">
+      <fileset dir="${properties.dir}"/>
+    </copy>
+    <copy todir="${build.home}">
+      <fileset dir="${resources.dir}" includes="*.html, *.jsp"/>
+    </copy>
+    <copy file="web.xml" tofile="${build.home}/WEB-INF/web.xml"/>
+  </target>
+
+	<target name="buildTask2" depends="compile">
+    <mkdir dir="${build.home}"/>
+    <mkdir dir="${build.home}/WEB-INF"/>
+    <copy todir="${build.home}/WEB-INF">
+      <fileset dir="." includes="${classes.dir}/**,${lib.dir}/**"/>
+    </copy>
+    <copy todir="${build.home}/WEB-INF/${classes.dir}">
+      <fileset dir="${properties.dir}"/>
+    </copy>
+    <copy todir="${build.home}">
+      <fileset dir="${resources.dir}" includes="*.html, *.jsp"/>
+    </copy>
+    <copy file="web.xml" tofile="${build.home}/WEB-INF/web.xml"/>
+  </target>
+    
+  <!-- This example dist target merely jars up the webapp files. -->
+  <target name="dist" depends="build">
+    <jar destfile="${dist.jar}" basedir="${build.home}">
+    </jar>
+  </target>
+
+  <!-- Clean -->
+  <!-- NOTE: This needs some work, we really need to undeploy the app in TC -->
+  <target name="clean">
+    <delete file="${dist.jar}"/>
+    <delete dir="${tomcat.home}/webapps/${app.name}"/>
+    <delete file="${tomcat.home}/webapps/${dist.jar}"/>
+    <delete dir="${build.home}"/>
+	<delete dir="${classes.dir}"/>
+  </target>
+
 </project>

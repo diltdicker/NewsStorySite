@@ -12,25 +12,17 @@ import java.io.PrintWriter;
     @author Dillon Dickerson
     @version 2/8/18
  **/
- 
-public class Index extends HttpServlet {
 
-    /*public void service(HttpServletRequest req, HttpServletResponse res)
+public class Home extends HttpServlet {
+
+    public void service(HttpServletRequest req, HttpServletResponse res)
     throws ServletException, IOException {
 
         HttpSession session = req.getSession();
-
-    }*/
-
-    public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-
         PrintWriter out = res.getWriter();
 		res.setContentType("text/html");
-		res.setStatus(200);
-		out.println("<html>");
-		out.println("Um, why are you here?");
-		out.println("Get back to where you belong");
-		out.println("<a href=\"/task1\">Where you belong</a>");
-        out.println("</html>");
+        String url = "/Lab2Task1/ctrl/?page=login";
+		out.println("<html><a href=" + url + ">Login</a><br>" + res.getStatus() + "<html>");
+
     }
 }

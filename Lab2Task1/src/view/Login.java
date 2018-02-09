@@ -12,7 +12,7 @@ import java.io.PrintWriter;
     @author Dillon Dickerson
     @version 2/8/18
  **/
- 
+
 public class Login extends HttpServlet {
 
     public void service(HttpServletRequest req, HttpServletResponse res)
@@ -20,5 +20,10 @@ public class Login extends HttpServlet {
 
         HttpSession session = req.getSession();
 
+        PrintWriter out = res.getWriter();
+        out.println("<!DOCTYPE><html><body><form class=\"\" action=\" " + req.getContextPath() + "/ctrl/login?page=login\" method=\"post\">" +
+                    "<input type=\"text\" name=\"username\" placeholder=\"username\" required>" +
+                    "<input type=\"text\" name=\"password\" placeholder=\"password\" required>" +
+                    "<button type=\"submit\" name=\"button\">Login</button></form></body></html>");
     }
 }

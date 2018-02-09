@@ -13,26 +13,16 @@ import java.io.PrintWriter;
     @version 2/8/18
  **/
 
-public class Debug extends HttpServlet {
+public class Error extends HttpServlet {
 
     public void service(HttpServletRequest req, HttpServletResponse res)
     throws ServletException, IOException {
 
         HttpSession session = req.getSession();
-
-    }
-
-    public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-
+        String url = "/Lab2Task1";
         PrintWriter out = res.getWriter();
-		res.setContentType("text/html");
-		out.println("<html>");
-		out.println("Um, why are you here?");
-		out.println("Get back to where you belong");
-		out.println("<a href=\"/Lab2Task1/test\">Where you belong</a>");
-        out.println(req.getContextPath());
-        out.println(req.getServletPath());
-        out.println(req.getRequestURL());
-        out.println("</html>");
+        out.println("<!DOCTYPE><html><body>Error Code " + res.getStatus() +
+        "");
+        out.println("<a href=" + url + ">Home</a><br>" + req.getServletPath() + "</body></html>");
     }
 }

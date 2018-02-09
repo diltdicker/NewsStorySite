@@ -2,7 +2,7 @@
    Example build.xml file for SER422 Spring 2015.
    Copyright 2015 Kevin A. Gary
    This build.xml does most of the things asked of you in the
-   submission guidelines document. However, you may need to 
+   submission guidelines document. However, you may need to
    customize actions for these targets per each lab's
    particular submission requirements, so please take the time
    to understand how this works!
@@ -26,8 +26,8 @@
       destdir="${app1.name}/${classes.dir}">
       <!-- Make sure you set your classpath! -->
       <classpath>
-        <fileset dir="${tomcat.home}/lib" includes="servlet-api.jar"/>
-      	<fileset dir="${app1.name}$/{lib.dir}" includes="*.jar"/>
+        <fileset dir="${tomcat1.home}/lib" includes="servlet-api.jar"/>
+      	<fileset dir="${app1.name}/${lib.dir}" includes="*.jar"/>
         <pathelement path="${app1.name}/${classes.dir}" />
       </classpath>
     </javac>
@@ -38,7 +38,7 @@
 			srcdir="${app2.name}/${src.dir}"
 			destdir="${app2.name}/${classes.dir}">
 			<classpath>
-				<fileset dir="${tomcat.home}/lib" includes="servlet-api.jar"/>
+				<fileset dir="${tomcat1.home}/lib" includes="servlet-api.jar"/>
 				<fileset dir="${app2.name}/${lib.dir}" includes="*.jar"/>
 				<pathelement path="${app2.name}/${classes.dir}"/>
 			</classpath>
@@ -52,59 +52,78 @@
        and copy it over. If you are creating a standalone app (like this
        example does), you can create it in a given directory, or create
        your dist jar first that can be run using java -jar. -->
-  <target name="deploy" depends="dist">
-    <copy file="${dist.jar}" todir="${tomcat.home}/webapps" overwrite="yes"/>
-  </target>
 
 	<target name="deployTask1" depends="distTask1">
-		<copy file="${dist1.jar}" todir="${tomcat1.home}/webapps" overwrite="yes"/>
-		<copy file="${dist2.jar}" todir="${tomcat2.home}/webapps" overwrite="yes"/>
+		<copy file="${dist1.war}" todir="${tomcat1.home}/webapps" overwrite="yes"/>
 	</target>
-      
-  <target name="buildTask2" depends="compile">
-    <mkdir dir="${build.home}"/>
-    <mkdir dir="${build.home}/WEB-INF"/>
-    <copy todir="${build.home}/WEB-INF">
-      <fileset dir="." includes="${classes.dir}/**,${lib.dir}/**"/>
+
+    <target name="deployTask2" depends="distTask2">
+		<copy file="${dist2.war}" todir="${tomcat1.home}/webapps" overwrite="yes"/>
+	</target>
+
+  <target name="buildTask1" depends="compileTask1">
+    <mkdir dir="${build1.home}"/>
+    <mkdir dir="${build1.home}/WEB-INF"/>
+    <!--copy todir="${build1.home}/WEB-INF">
+      <fileset dir="." includes="${classes.dir}/**"/>
+      <fileset dir="." includes="${lib.dir}/**"/>
+  </copy-->
+    <copy todir="${build1.home}/WEB-INF">
+        <fileset dir="${app1.name}" excludes="${src.dir}/**"/>
     </copy>
-    <copy todir="${build.home}/WEB-INF/${classes.dir}">
-      <fileset dir="${properties.dir}"/>
-    </copy>
-    <copy todir="${build.home}">
-      <fileset dir="${resources.dir}" includes="*.html, *.jsp"/>
-    </copy>
-    <copy file="web.xml" tofile="${build.home}/WEB-INF/web.xml"/>
+    <!--copy file="${web1.xml}" tofile="${build1.home}/WEB-INF/web.xml"/-->
+    <!--war basedir="${build1.home}" destfile="${dist1.war}" webxml="${web1.xml}">
+        <exclude name="WEB-INF/**"/>
+        <webinf dir="${build1.home}/WEB-INF/">
+            <include name="${lib.dir}/**" />
+            <include name="${classes.dir}/**"/>
+        </webinf>
+    </war-->
   </target>
 
-	<target name="buildTask2" depends="compile">
-    <mkdir dir="${build.home}"/>
-    <mkdir dir="${build.home}/WEB-INF"/>
-    <copy todir="${build.home}/WEB-INF">
-      <fileset dir="." includes="${classes.dir}/**,${lib.dir}/**"/>
+	<target name="buildTask2" depends="compileTask2">
+    <mkdir dir="${build2.home}"/>
+    <mkdir dir="${build2.home}/WEB-INF"/>
+    <copy todir="${build2.home}/WEB-INF">
+      <fileset dir="." includes="${app2.name}/${classes.dir}/**,${app2.name}/${lib.dir}/**"/>
     </copy>
-    <copy todir="${build.home}/WEB-INF/${classes.dir}">
-      <fileset dir="${properties.dir}"/>
-    </copy>
-    <copy todir="${build.home}">
-      <fileset dir="${resources.dir}" includes="*.html, *.jsp"/>
-    </copy>
-    <copy file="web.xml" tofile="${build.home}/WEB-INF/web.xml"/>
+    <copy file="task2.xml" tofile="${build2.home}/WEB-INF/web.xml"/>
   </target>
-    
+
   <!-- This example dist target merely jars up the webapp files. -->
-  <target name="dist" depends="build">
-    <jar destfile="${dist.jar}" basedir="${build.home}">
+  <target name="distTask1" depends="buildTask1">
+      <war basedir="${build1.home}" destfile="${dist1.war}" webxml="${web1.xml}">
+          <!--exclude name="WEB-INF/**"/-->
+          <!--webinf dir="${build1.home}/WEB-INF/">
+              <include name="${lib.dir}/**" />
+              <include name="${classes.dir}/**"/>
+          </webinf-->
+      </war>
+  </target>
+
+  <target name="distTask2" depends="buildTask2">
+    <jar destfile="${dist2.war}" basedir="${build2.home}">
     </jar>
   </target>
 
   <!-- Clean -->
   <!-- NOTE: This needs some work, we really need to undeploy the app in TC -->
-  <target name="clean">
-    <delete file="${dist.jar}"/>
-    <delete dir="${tomcat.home}/webapps/${app.name}"/>
-    <delete file="${tomcat.home}/webapps/${dist.jar}"/>
-    <delete dir="${build.home}"/>
-	<delete dir="${classes.dir}"/>
+  <target name="cleanTask1">
+    <delete file="${dist1.war}"/>
+    <delete dir="${build1.home}"/>
+	<delete dir="${app1.name}/${classes.dir}"/>
+    <delete dir="${tomcat1.home}/webapps/${app1.name}" includeemptydirs="true"/>
+        <!--fileset dir="${tomcat1.home}/webapps/${app1.name}" includes="**/**"/>
+    </delete-->
+    <delete file="${tomcat1.home}/webapps/${dist1.war}"/>
+  </target>
+
+  <target name="cleanTask2">
+    <delete file="${dist2.war}"/>
+    <delete dir="${tomcat2.home}/webapps/${app2.name}"/>
+    <delete file="${tomcat2.home}/webapps/${dist2.war}"/>
+    <delete dir="${build2.home}"/>
+	<delete dir="${app2.name}/${classes.dir}"/>
   </target>
 
 </project>

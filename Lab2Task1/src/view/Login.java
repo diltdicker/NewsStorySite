@@ -19,9 +19,17 @@ public class Login extends HttpServlet {
     throws ServletException, IOException {
 
         HttpSession session = req.getSession();
+        boolean isLoggedIn = false;
+        if (null != session.getAttribute("isLoggedIn")) {
+            isLoggedIn = (boolean) session.getAttribute("isLoggedIn");
+        }
         Controller.test();
         PrintWriter out = res.getWriter();
-        out.println("<html><body><form class=\"\" action=\" " + req.getContextPath() + "/ctrl/login?page=login\" method=\"post\">" +
+        out.println("<html><body>");
+        if (isLoggedIn) {
+            out.println("<p>" + session.getAttribute("username") + "</p><br>");
+        }
+        out.println("<form class=\"\" action=\" " + req.getContextPath() + "/ctrl/login?page=login\" method=\"post\">" +
                     "<input type=\"text\" name=\"username\" placeholder=\"username\" required>" +
                     "<input type=\"text\" name=\"password\" placeholder=\"password\" required>" +
                     "<button type=\"submit\" name=\"button\">Login</button></form></body></html>");

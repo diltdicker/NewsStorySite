@@ -1,3 +1,3 @@
 public enum Pages {
-    INDEX, LOGIN, ERROR
+    INDEX, LOGIN, EDIT, DELETE, ADD, ERROR
 }

@@ -13,14 +13,14 @@ import java.io.PrintWriter;
     @version 2/8/18
  **/
 
-public class Home extends HttpServlet {
+public class EditStory extends HttpServlet {
 
     public void service(HttpServletRequest req, HttpServletResponse res)
     throws ServletException, IOException {
 
         HttpSession session = req.getSession();
 
-        
+
 
         PrintWriter out = res.getWriter();
 		res.setContentType("text/html");

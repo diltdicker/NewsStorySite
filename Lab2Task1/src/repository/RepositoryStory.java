@@ -15,7 +15,7 @@ import com.mongodb.MongoException;
     public static MongoClient mongo;
     public static DB db;
 
-    public RepositoryStory(MongoClient mongo, DB, db) {
+    public RepositoryStory(MongoClient mongo, DB db) {
         this.mongo = mongo;
         this.db = db;
     }

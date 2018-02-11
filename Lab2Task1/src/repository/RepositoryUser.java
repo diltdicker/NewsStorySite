@@ -14,28 +14,77 @@ import com.mongodb.MongoException;
 
     public static MongoClient mongo;
     public static DB db;
+    private DBCollection userTable;
 
-    public RepositoryUser(MongoClient mongo, DB, db) {
+    public RepositoryUser(MongoClient mongo, DB db) {
         this.mongo = mongo;
         this.db = db;
+        this.userTable = db.getCollection("Users");
     }
 
     public synchronized boolean createUser(User user) {
-        // TODO
-        return false;
+        boolean status = true;
+        try {
+            BasicDBObject userDoc = new BasicDBObject();
+			userDoc.put("username", user.getUserName());
+			userDoc.put("passHash", user.getPassHash());
+			userDoc.put("name", user.getName());
+            userDoc.put("role", user.getRole().toString());
+            this.userTable.insert(userDoc);
+        } catch (Exception e) {
+            status = false;
+            e.printStackTrace();
+        } finally {
+            return status;
+        }
     }
 
     public synchronized User readUser(String username) {
-        // TODO
-        return null;
+        BasicDBObject query = new BasicDBObject();
+        User result = null;
+        try {
+            query.put("username", username);
+            result = new User(userTable.findOne(query).toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = null;
+        } finally {
+            return result;
+        }
     }
 
     public synchronized boolean updateUser(String username, User user) {
-        // TODO
-        return false;
+        boolean status = true;
+        try {
+            BasicDBObject userDoc = new BasicDBObject();
+            BasicDBObject oldUserDoc = new BasicDBObject();
+            BasicDBObject update = new BasicDBObject();
+            oldUserDoc.put("username", username);
+			userDoc.put("username", user.getUserName());
+			userDoc.put("passHash", user.getPassHash());
+			userDoc.put("name", user.getName());
+            userDoc.put("role", user.getRole().toString());
+            update.put("$set", userDoc);
+            this.userTable.update(oldUserDoc, update);
+        } catch (Exception e) {
+            status = false;
+            e.printStackTrace();
+        } finally {
+            return status;
+        }
     }
 
     public synchronized boolean deleteUser(String username) {
-        return false;
+        boolean status = true;
+        try {
+            BasicDBObject query = new BasicDBObject();
+            query.put("username", username);
+            System.out.println(userTable.remove(query));
+        } catch (Exception e) {
+            status = false;
+            e.printStackTrace();
+        } finally {
+            return status;
+        }
     }
  }

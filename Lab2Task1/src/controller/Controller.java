@@ -20,22 +20,22 @@ import java.io.IOException;
 
 public class Controller extends HttpServlet {
 
-    public static Pages other;
+    //public static Pages other;
     public static int index = 0;
 
     public static void test() {
         System.out.println("testing helllo");
-        System.out.println(other);
+        //System.out.println(other);
         System.out.println(index++);
     }
 
-    public static Page handle;
-    final private static String[] pageList = {"/index", "/login"};
+    public static Pages handle;
+    final private static String[] pageList = {"/index", "/login", "/edit", "/delete", "/edit"};
 
     public void init() throws ServletException {
         //ServletContext srvltCon = getServletContext();
-        other = Page.sERROR;
-		BizLogic.InitDB();
+        System.out.println("Controller Started");
+        //other = Pages.ERROR;
     }
 
     private void doHandle(HttpServletRequest req, HttpServletResponse res)
@@ -50,6 +50,20 @@ public class Controller extends HttpServlet {
             }
             case LOGIN: {
                 page = pageList[1];
+                break;
+            }
+            case EDIT: {
+                page = pageList[2];
+                session.setAttribute("pageAction", Pages.EDIT);
+                break;
+            }
+            case DELETE: {
+                page = pageList[3];
+                break;
+            }
+            case ADD: {
+                page = pageList[4];
+                session.setAttribute("pageAction", Pages.ADD);
                 break;
             }
             case ERROR: {
@@ -71,19 +85,28 @@ public class Controller extends HttpServlet {
             pageFlag = req.getParameter("page");
         }
         switch (pageFlag) {
-            case "":           // home page
+            case "":{
                 handle = Pages.ERROR;
                 res.setStatus(405);
                 break;
-            case "login":           // login page
+            }
+            case "home":{
+                handle = Pages.ERROR;
+                res.setStatus(405);
+                break;
+            }
+            case "login":{
                 handle = Pages.LOGIN;
                 res.setStatus(200);
                 System.out.println(req.getParameter("username"));
                 System.out.println(req.getParameter("password"));       //works
+
                 break;
-            default:
+            }
+            default:{
                 handle = Pages.ERROR;
                 res.setStatus(404);
+            }
         }
         doHandle(req, res);
     }
@@ -96,17 +119,25 @@ public class Controller extends HttpServlet {
             pageFlag = req.getParameter("page");
         }
         switch (pageFlag) {
-            case "":           // home page
+            case "":{
                 handle = Pages.INDEX;
                 res.setStatus(200);
                 break;
-            case "login":           // login page
+            }
+            case "home":{
+                handle = Pages.INDEX;
+                res.setStatus(200);
+                break;
+            }
+            case "login":{
                 handle = Pages.LOGIN;
                 res.setStatus(200);
                 break;
-            default:
+            }
+            default:{
                 handle = Pages.INDEX;
                 res.setStatus(404);
+            }
         }
         doHandle(req, res);
     }

@@ -59,4 +59,9 @@
         <url-pattern>/error</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>Debug</servlet-name>
+        <url-pattern>/debug</url-pattern>
+    </servlet-mapping>
+
 </web-app>

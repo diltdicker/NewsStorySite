@@ -1,3 +1,3 @@
 public enum UserRoles {
-    Guest, Subscriber, Reporter
+    Guest, Subscriber, Reporter, Admin
 }

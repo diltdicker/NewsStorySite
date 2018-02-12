@@ -34,6 +34,7 @@ import java.util.ArrayList;
             storyDoc.put("title", story.getTitle());
             storyDoc.put("content", story.getContent());
             storyDoc.put("subscriberOnly", story.getSubscriberOnly());
+            storyDoc.put("subscriberList", story.getSubscriberList());
             this.storyTable.insert(storyDoc);
         } catch (Exception e) {
             status = false;
@@ -60,12 +61,39 @@ import java.util.ArrayList;
     }
 
     public synchronized boolean updateStory(int storyUID, Story story) {
-        // TODO
-        return false;
+        boolean status = true;
+        try {
+            BasicDBObject storyDoc = new BasicDBObject();
+            BasicDBObject oldStoryDoc = new BasicDBObject();
+            BasicDBObject update = new BasicDBObject();
+            oldStoryDoc.put("postID", storyUID);
+            storyDoc.put("author", story.getAuthor());
+            storyDoc.put("title", story.getTitle());
+            storyDoc.put("content", story.getContent());
+            storyDoc.put("subscriberOnly", story.getSubscriberOnly());
+            storyDoc.put("subscriberList", story.getSubscriberList());
+            update.put("$set", storyDoc);
+            this.storyTable.update(oldStoryDoc, update);
+        } catch (Exception e) {
+            status = false;
+            e.printStackTrace();
+        } finally {
+            return status;
+        }
     }
 
     public synchronized boolean deleteStory(int storyUID) {
-        return false;
+        boolean status = true;
+        try {
+            BasicDBObject query = new BasicDBObject();
+            query.put("postID", storyUID);
+            System.out.println(storyTable.remove(query));
+        } catch (Exception e) {
+            status = false;
+            e.printStackTrace();
+        } finally {
+            return status;
+        }
     }
 
 

@@ -1,0 +1,25 @@
+<!DOCTYPE>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>create user</title>
+    </head>
+    <body>
+        <form class="form" action="newUser.html" method="post">
+            <label for="username">Username:</label><br>
+            <input type="text" name="username" required><br>
+            <label for="name">Name:</label><br>
+            <input type="text" name="name" required><br>
+            <label for="password1">Password:</label><br>
+            <input type="password" name="password1" required><br>
+            <input type="password" name="password2" required><br>
+            <label for="role">User Type: </label>
+            <select class="select" name="role">
+                <option value="Subscriber" selected>Subscriber</option>
+                <option value="Reporter">Reporter</option>
+            </select><br>
+            <button type="submit" name="button">Submit</button>
+        </form>
+    </body>
+</html>

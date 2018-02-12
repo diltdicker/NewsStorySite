@@ -51,6 +51,7 @@ import com.mongodb.MongoException;
             e.printStackTrace();
             result = null;
         } finally {
+            System.out.println("leaving readUser");
             return result;
         }
     }

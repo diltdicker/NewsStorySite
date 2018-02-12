@@ -30,11 +30,13 @@ public class Home extends HttpServlet {
         String username = "username";
         if (null != session.getAttribute("isLoggedIn")) {
             isLoggedIn = (boolean) session.getAttribute("isLoggedIn");
-            username = (String) session.getAttribute("username");
-            String role = (String) session.getAttribute("role");
-            System.out.println("role:" + role);
-            if (role.equals("Reporter") || role.equals("Admin")) {
-                isReporter = true;
+            if(isLoggedIn) {
+                username = (String) session.getAttribute("username");
+                String role = (String) session.getAttribute("role");
+                System.out.println("role:" + role);
+                if (role.equals("Reporter") || role.equals("Admin")) {
+                    isReporter = true;
+                }
             }
         }
 

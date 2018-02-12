@@ -31,7 +31,8 @@ public class Controller extends HttpServlet {
     }
 
     public static Pages handle;
-    final private static String[] pageList = {"/index", "/login", "/edit", "/delete", "/edit", "/loginResult", "/article"};
+    final private static String[] pageList = {"/index", "/login", "/edit", "/delete", "/edit", "/loginResult", "/article",
+        "/newUser"};
 
     public void init() throws ServletException {
         //ServletContext srvltCon = getServletContext();
@@ -81,6 +82,9 @@ public class Controller extends HttpServlet {
                     session.setAttribute("role", BizLogic.getRole(req.getParameter("username")).toString());
                     page = pageList[0];
                 } else {
+                    System.out.println("login failed");
+                    session.setAttribute("isLoggedIn", false);
+                    res.setStatus(400);
                     page = pageList[5];
                 }
                 break;
@@ -96,6 +100,10 @@ public class Controller extends HttpServlet {
             case VIEW: {
                 break;
             }
+            case NEWUSER :{
+                page = pageList[7];
+                break;
+            }
             case ERROR: {
                 page = "/error";
                 break;
@@ -109,6 +117,7 @@ public class Controller extends HttpServlet {
 
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         String pageFlag;
+        HttpSession session = req.getSession();
         if (req.getParameter("page") == null) {
             pageFlag = "";
         } else {
@@ -146,6 +155,36 @@ public class Controller extends HttpServlet {
             case "deleteStory":{
                 break;
             }
+            case "newUser" :{
+                res.setStatus(200);
+                System.out.println(req.getParameter("username"));
+                System.out.println(req.getParameter("name"));
+                System.out.println(req.getParameter("password1"));
+                System.out.println(req.getParameter("password2"));
+                System.out.println(req.getParameter("role"));
+                String pass1 = req.getParameter("password1");
+                String pass2 = req.getParameter("password2");
+                if (pass1.equals(pass2)) {
+                    session.setAttribute("passMatch", true);
+                    handle = Pages.INDEX;
+                    // create User
+                    String username = req.getParameter("username");
+                    String roleStr = req.getParameter("role");
+                    String name = req.getParameter("name");
+                    if (bizLogicCtrl.createUser(username, name, pass1, roleStr)) {
+                        session.setAttribute("usernameTaken", false);
+                    } else {
+                        // username taken
+                        handle =Pages.NEWUSER;
+                        session.setAttribute("usernameTaken", true);
+                    }
+                } else {
+                    session.setAttribute("passMatch", false);
+                    handle = Pages.NEWUSER;
+                }
+
+                break;
+            }
             default:{
                 handle = Pages.ERROR;
                 res.setStatus(404);
@@ -156,6 +195,7 @@ public class Controller extends HttpServlet {
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         String pageFlag;
+        HttpSession session = req.getSession();
         if (req.getParameter("page") == null) {
             pageFlag = "";
         } else {
@@ -192,6 +232,10 @@ public class Controller extends HttpServlet {
             case "logout": {
                 res.setStatus(200);
                 handle = Pages.LOGOUT;
+                break;
+            }
+            case "newUser": {
+                handle = Pages.NEWUSER;
                 break;
             }
             default:{

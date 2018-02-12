@@ -6,7 +6,11 @@
  public class PassHash {
 
      public static String hash(String rawPass) {
-         return rawPass;
+         String hash = "";
+         for (int i = 0; i < rawPass.length(); i++) {
+             hash += (int) rawPass.charAt(i);
+         }
+         return hash;
      }
 
  }

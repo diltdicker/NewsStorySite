@@ -19,19 +19,46 @@ public class CreateUser extends HttpServlet {
     throws ServletException, IOException {
 
         HttpSession session = req.getSession();
+        PrintWriter out = res.getWriter();
+		res.setContentType("text/html");
+        String loginUrl =  req.getContextPath()+"/ctrl/?page=login";
+        String logoutUrl = req.getContextPath()+"/ctrl/?page=logout";
+        String newStoryUrl = req.getContextPath()+"/ctrl/?page=addStory";
+        String newUserUrl = req.getContextPath()+"/ctrl/?page=newUser";
+        String homeUrl = req.getContextPath();
         boolean isLoggedIn = false;
+        boolean isReporter = false;
+        String username = "username";
         if (null != session.getAttribute("isLoggedIn")) {
             isLoggedIn = (boolean) session.getAttribute("isLoggedIn");
+            if(isLoggedIn) {
+                username = (String) session.getAttribute("username");
+                String role = (String) session.getAttribute("role");
+                System.out.println("role:" + role);
+                if (role.equals("Reporter") || role.equals("Admin")) {
+                    isReporter = true;
+                }
+            }
         }
-        Controller.test();
-        PrintWriter out = res.getWriter();
-        out.println("<html><body>");
-        if (isLoggedIn) {
-            out.println("<p>" + session.getAttribute("username") + "</p><br>");
+        boolean passMatch = false;
+        boolean usernameTaken = false;
+        if (null != session.getAttribute("passMatch")) {
+            passMatch = (boolean) session.getAttribute("passMatch");
         }
-        out.println("<form class=\"\" action=\" " + req.getContextPath() + "/ctrl/login?page=login\" method=\"post\">" +
-                    "<input type=\"text\" name=\"username\" placeholder=\"username\" required>" +
-                    "<input type=\"text\" name=\"password\" placeholder=\"password\" required>" +
-                    "<button type=\"submit\" name=\"button\">Login</button></form></body></html>");
+        if (null != session.getAttribute("usernameTaken")) {
+            usernameTaken = (boolean) session.getAttribute("usernameTaken");
+        }
+
+		out.println("<html>");
+
+        out.println(PageTemplate.printHead());
+        out.println("<body>");
+        out.println(PageTemplate.printNavbar(isLoggedIn, isReporter, username, homeUrl, newStoryUrl, loginUrl, logoutUrl));
+        // Print content here
+        out.println(PageTemplate.printNewUser(newUserUrl, passMatch, usernameTaken));
+
+        out.println("</body>");
+
+        out.println("</html>");
     }
 }

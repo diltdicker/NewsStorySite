@@ -35,6 +35,11 @@
     </servlet>
 
     <servlet>
+        <servlet-name>NewUserView</servlet-name>
+        <servlet-class>CreateUser</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>ErrorView</servlet-name>
         <servlet-class>Error</servlet-class>
     </servlet>
@@ -67,6 +72,11 @@
     <servlet-mapping>
         <servlet-name>LoginResultView</servlet-name>
         <url-pattern>/loginResult</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>NewUserView</servlet-name>
+        <url-pattern>/newUser</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

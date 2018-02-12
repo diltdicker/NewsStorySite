@@ -88,4 +88,48 @@ public class PageTemplate {
         return area;
     }
 
+    public static String printNewUser(String url, boolean passMatch, boolean usernameTaken) {
+        String form = "<form class=\"form\" action="+url+" method=\"post\">";
+        if (passMatch) {
+            form += "<p>password doesn't match</p><br>";
+        }
+        if (usernameTaken) {
+            form += "<p>the username is already taken</p><br>";
+        }
+            form += "<label for=\"username\">Username:</label><br>"+
+            "<input type=\"text\" name=\"username\" required><br>"+
+            "<label for=\"name\">Name:</label><br>"+
+            "<input type=\"text\" name=\"name\" required><br>"+
+            "<label for=\"password1\">Password:</label><br>"+
+            "<input type=\"password\" name=\"password1\" required><br>"+
+            "<input type=\"password\" name=\"password2\" required><br>"+
+            "<label for=\"role\">User Type: </label>"+
+            "<select class=\"select\" name=\"role\">"+
+                "<option value=\"Subscriber\" selected>Subscriber</option>"+
+                "<option value=\"Reporter\">Reporter</option>"+
+            "</select><br>"+
+            "<button type=\"submit\" name=\"button\">Submit</button>"+
+        "</form>";
+        return form;
+    }
+
+    public static String printLoginForm(String url) {
+        String form = "<form class=\"form\" action="+url+" method=\"post\">"+
+            "<input type=\"text\" name=\"username\" placeholder=\"username\" required>"+
+            "<input type=\"text\" name=\"password\" placeholder=\"password\" required>"+
+            "<button type=\"submit\" name=\"button\">Login</button>"+
+        "</form>";
+        return form;
+    }
+
+    public static String printLoginResult(String url, String newUserUrl, int statusCode) {
+        String form = "<div class=\"form\">"+
+            "<h3>Error "+statusCode+"</h3>"+
+            "<p>Your login attempt was unsucsessful</p>"+
+            "<p>click here to try again </p><a href="+url+">LOGIN</a>"+
+            "<p>click here to create a new account </p><a href="+newUserUrl+">Nw</a>"+
+        "</div>";
+        return form;
+    }
+
 }

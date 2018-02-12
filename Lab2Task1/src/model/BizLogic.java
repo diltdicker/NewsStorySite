@@ -34,7 +34,7 @@ public class BizLogic {
 		this.userDB = new RepositoryUser(this.mongo, this.db);
 		this.storyDB = new RepositoryStory(this.mongo, this.db);
 
-		userDB.createUser(new User("admin", "Administrator", "password", UserRoles.Admin));
+		//userDB.createUser(new User("admin", "Administrator", "11297115115119111114100", UserRoles.Admin));		//password = password
 	}
 
 
@@ -51,6 +51,9 @@ public class BizLogic {
 			System.out.println("user logged in :" + username);
 			usr = user.getUserName();
 			pass = user.getPassHash();
+
+			System.out.println("input: " + password);
+			System.out.println("stored: " + pass);
 		}
 		if (username.equals(usr) && password.equals(pass)) {
 			return true;
@@ -60,9 +63,12 @@ public class BizLogic {
     }
 
 	public static boolean userExists(String username) {
+		System.out.println("BizLogic userExists");
 		if (null != userDB.readUser(username)) {
+			System.out.println("user exists");
 			return true;
 		} else {
+			System.out.println("user does not exist");
 			return false;
 		}
 	}
@@ -86,4 +92,23 @@ public class BizLogic {
 		User user = userDB.readUser(username);
 		return user;
 	}*/
+
+	public static boolean createUser(String username, String name, String rawPass, String roleStr) {
+		if (userExists(username)) {
+			return false;
+		} else {
+			System.out.println("BizLogic createUser");
+			UserRoles role = UserRoles.Guest;
+			if (roleStr.equals("Admin")) {
+				role = UserRoles.Admin;
+			} else if (roleStr.equals("Reporter")) {
+				role = UserRoles.Reporter;
+			} else if (roleStr.equals("Subscriber")) {
+				role = UserRoles.Subscriber;
+			}
+			String passHash = PassHash.hash(rawPass);
+			userDB.createUser(new User(username, name, passHash, role));
+			return true;
+		}
+	}
 }

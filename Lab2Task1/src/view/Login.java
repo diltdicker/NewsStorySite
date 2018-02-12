@@ -19,20 +19,36 @@ public class Login extends HttpServlet {
     throws ServletException, IOException {
 
         HttpSession session = req.getSession();
+        PrintWriter out = res.getWriter();
+		res.setContentType("text/html");
+        String loginUrl =  req.getContextPath()+"/ctrl/?page=login";
+        String logoutUrl = req.getContextPath()+"/ctrl/?page=logout";
+        String newStoryUrl = req.getContextPath()+"/ctrl/?page=addStory";
+        String loginResultUrl = req.getContextPath()+"/ctrl/?page=loginResult";
+        String homeUrl = req.getContextPath();
         boolean isLoggedIn = false;
+        boolean isReporter = false;
+        String username = "username";
         if (null != session.getAttribute("isLoggedIn")) {
             isLoggedIn = (boolean) session.getAttribute("isLoggedIn");
+            if(isLoggedIn) {
+                username = (String) session.getAttribute("username");
+                String role = (String) session.getAttribute("role");
+                System.out.println("role:" + role);
+                if (role.equals("Reporter") || role.equals("Admin")) {
+                    isReporter = true;
+                }
+            }
         }
-        Controller.test();
-        PrintWriter out = res.getWriter();
-        out.println("<html><body>");
-        if (isLoggedIn) {
-            out.println("<p>" + session.getAttribute("username") + "</p><br>");
-        }
-        out.println("<form class=\"\" action=\" " + req.getContextPath() + "/ctrl/login?page=loginResult\" method=\"post\">" +
-                    "<input type=\"text\" name=\"username\" placeholder=\"username\" required>" +
-                    "<input type=\"text\" name=\"password\" placeholder=\"password\" required>" +
-                    "<button type=\"submit\" name=\"button\">Login</button></form></body></html>");
-        res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+
+		out.println("<html>");
+
+        out.println(PageTemplate.printHead());
+        out.println("<body>");
+        out.println(PageTemplate.printNavbar(isLoggedIn, isReporter, username, homeUrl, newStoryUrl, loginUrl, logoutUrl));
+        out.println(PageTemplate.printLoginForm(loginResultUrl));
+        out.println("</body>");
+
+        out.println("</html>");
     }
 }

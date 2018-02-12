@@ -176,9 +176,11 @@ public class Controller extends HttpServlet {
                     } else {
                         // username taken
                         handle =Pages.NEWUSER;
+                        System.out.println("username taken set");
                         session.setAttribute("usernameTaken", true);
                     }
                 } else {
+                    System.out.println("passwords do not match set");
                     session.setAttribute("passMatch", false);
                     handle = Pages.NEWUSER;
                 }

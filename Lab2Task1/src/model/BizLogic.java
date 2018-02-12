@@ -95,6 +95,7 @@ public class BizLogic {
 
 	public static boolean createUser(String username, String name, String rawPass, String roleStr) {
 		if (userExists(username)) {
+			System.out.println("user exists: bizLogic");
 			return false;
 		} else {
 			System.out.println("BizLogic createUser");

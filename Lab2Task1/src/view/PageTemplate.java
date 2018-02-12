@@ -90,7 +90,7 @@ public class PageTemplate {
 
     public static String printNewUser(String url, boolean passMatch, boolean usernameTaken) {
         String form = "<form class=\"form\" action="+url+" method=\"post\">";
-        if (passMatch) {
+        if (!passMatch) {
             form += "<p>password doesn't match</p><br>";
         }
         if (usernameTaken) {

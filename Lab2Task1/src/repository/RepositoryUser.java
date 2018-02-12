@@ -40,11 +40,13 @@ import com.mongodb.MongoException;
     }
 
     public synchronized User readUser(String username) {
+        System.out.println("READ USER");
         BasicDBObject query = new BasicDBObject();
         User result = null;
         try {
             query.put("username", username);
             result = new User(userTable.findOne(query).toString());
+            System.out.println("Sucsses:");
         } catch (Exception e) {
             e.printStackTrace();
             result = null;

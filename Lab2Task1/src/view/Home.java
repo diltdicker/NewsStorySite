@@ -19,13 +19,34 @@ public class Home extends HttpServlet {
     throws ServletException, IOException {
 
         HttpSession session = req.getSession();
-
-        
-
         PrintWriter out = res.getWriter();
 		res.setContentType("text/html");
-        String url = "/Lab2Task1/ctrl/?page=login";
-		out.println("<html><a href=" + url + ">Login</a><br>" + res.getStatus() + "<html>");
+        String loginUrl =  req.getContextPath()+"/ctrl/?page=login";
+        String logoutUrl = req.getContextPath()+"/ctrl/?page=logout";
+        String newStoryUrl = req.getContextPath()+"/ctrl/?page=addStory";
+        String homeUrl = req.getContextPath();
+        boolean isLoggedIn = false;
+        boolean isReporter = false;
+        String username = "username";
+        if (null != session.getAttribute("isLoggedIn")) {
+            isLoggedIn = (boolean) session.getAttribute("isLoggedIn");
+            username = (String) session.getAttribute("username");
+            String role = (String) session.getAttribute("role");
+            System.out.println("role:" + role);
+            if (role.equals("Reporter") || role.equals("Admin")) {
+                isReporter = true;
+            }
+        }
+
+		out.println("<html>");
+
+        out.println(PageTemplate.printHead());
+        out.println("<body>");
+        out.println(PageTemplate.printNavbar(isLoggedIn, isReporter, username, homeUrl, newStoryUrl, loginUrl, logoutUrl));
+        // Print articles here
+        out.println("</body>");
+
+        out.println("</html>");
 
     }
 }

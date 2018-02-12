@@ -13,7 +13,7 @@ import java.io.PrintWriter;
     @version 2/8/18
  **/
 
-public class Login extends HttpServlet {
+public class ViewArticle extends HttpServlet {
 
     public void service(HttpServletRequest req, HttpServletResponse res)
     throws ServletException, IOException {
@@ -33,6 +33,5 @@ public class Login extends HttpServlet {
                     "<input type=\"text\" name=\"username\" placeholder=\"username\" required>" +
                     "<input type=\"text\" name=\"password\" placeholder=\"password\" required>" +
                     "<button type=\"submit\" name=\"button\">Login</button></form></body></html>");
-        res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
     }
 }

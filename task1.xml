@@ -30,6 +30,11 @@
     </servlet>
 
     <servlet>
+        <servlet-name>LoginResultView</servlet-name>
+        <servlet-class>LoginResult</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>ErrorView</servlet-name>
         <servlet-class>Error</servlet-class>
     </servlet>
@@ -57,6 +62,11 @@
     <servlet-mapping>
         <servlet-name>ErrorView</servlet-name>
         <url-pattern>/error</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>LoginResultView</servlet-name>
+        <url-pattern>/loginResult</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

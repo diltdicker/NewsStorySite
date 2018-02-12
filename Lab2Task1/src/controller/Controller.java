@@ -22,6 +22,7 @@ public class Controller extends HttpServlet {
 
     //public static Pages other;
     public static int index = 0;
+    public static BizLogic bizLogicCtrl;
 
     public static void test() {
         System.out.println("testing helllo");
@@ -30,12 +31,18 @@ public class Controller extends HttpServlet {
     }
 
     public static Pages handle;
-    final private static String[] pageList = {"/index", "/login", "/edit", "/delete", "/edit"};
+    final private static String[] pageList = {"/index", "/login", "/edit", "/delete", "/edit", "/loginResult", "/article"};
 
     public void init() throws ServletException {
         //ServletContext srvltCon = getServletContext();
         System.out.println("Controller Started");
         //other = Pages.ERROR;
+        this.bizLogicCtrl = new BizLogic();
+    }
+
+    public void destroy() {
+        this.bizLogicCtrl.destroy();
+        System.out.println("Controller Destroyed");
     }
 
     private void doHandle(HttpServletRequest req, HttpServletResponse res)
@@ -64,6 +71,29 @@ public class Controller extends HttpServlet {
             case ADD: {
                 page = pageList[4];
                 session.setAttribute("pageAction", Pages.ADD);
+                break;
+            }
+            case LOGINRESULT: {
+                boolean isLoggedIn = BizLogic.login(req.getParameter("username"), req.getParameter("password"));
+                session.setAttribute("isLoggedIn", isLoggedIn);
+                if (isLoggedIn) {
+                    session.setAttribute("username", req.getParameter("username"));
+                    session.setAttribute("role", BizLogic.getRole(req.getParameter("username")).toString());
+                    page = pageList[0];
+                } else {
+                    page = pageList[5];
+                }
+                break;
+            }
+            case LOGOUT: {
+                session.setAttribute("isLoggedIn", false);
+                session.setAttribute("username", "Guest");
+                session.setAttribute("role", UserRoles.Guest.toString());
+                res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+                page = pageList[0];
+                break;
+            }
+            case VIEW: {
                 break;
             }
             case ERROR: {
@@ -97,10 +127,23 @@ public class Controller extends HttpServlet {
             }
             case "login":{
                 handle = Pages.LOGIN;
+                res.setStatus(404);
+                break;
+            }
+            case "loginResult":{
                 res.setStatus(200);
                 System.out.println(req.getParameter("username"));
                 System.out.println(req.getParameter("password"));       //works
-
+                handle = Pages.LOGINRESULT;
+                break;
+            }
+            case "editStory":{
+                break;
+            }
+            case "addStory":{
+                break;
+            }
+            case "deleteStory":{
                 break;
             }
             default:{
@@ -132,6 +175,23 @@ public class Controller extends HttpServlet {
             case "login":{
                 handle = Pages.LOGIN;
                 res.setStatus(200);
+                break;
+            }
+            case "loginResult":{
+                break;
+            }
+            case "editStory":{
+                break;
+            }
+            case "addStory":{
+                break;
+            }
+            case "deleteStory":{
+                break;
+            }
+            case "logout": {
+                res.setStatus(200);
+                handle = Pages.LOGOUT;
                 break;
             }
             default:{

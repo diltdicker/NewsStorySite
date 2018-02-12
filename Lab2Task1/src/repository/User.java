@@ -23,21 +23,17 @@ import net.sf.json.xml.XMLSerializer;
          this.username = jsonObj.getString("username");
          this.passHash = jsonObj.getString("passHash");
          String jsonRole = jsonObj.getString("role");
-         switch(jsonRole) {
-             case "Subcriber":{
-                 this.role = UserRoles.Subscriber;
-                 break;
-             }
-             case "Reporter": {
-                 this.role = UserRoles.Reporter;
-             }
-             case "Admin":{
-                 this.role = UserRoles.Admin;
-             }
-             default: {
-                 this.role = UserRoles.Guest;
-             }
+         System.out.println("JSON role: " + jsonRole);
+         if (jsonRole.equals("Admin")) {
+             this.role = UserRoles.Admin;
+         } else if (jsonRole.equals("Subscriber")) {
+             this.role = UserRoles.Subscriber;
+         } else if (jsonRole.equals("Reporter")) {
+             this.role = UserRoles.Reporter;
+         } else {
+             this.role = UserRoles.Guest;
          }
+         System.out.println("aquired role: " + this.role);
      }
 
      public User(String username, String name, String passHash, UserRoles role) {

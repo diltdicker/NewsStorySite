@@ -24,6 +24,8 @@ public class Debug extends HttpServlet {
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
+        //BizLogic.userDB.createUser(new User("admin", "Administrator", "password", UserRoles.Admin));
+
         PrintWriter out = res.getWriter();
 		res.setContentType("text/html");
 		out.println("<html>");

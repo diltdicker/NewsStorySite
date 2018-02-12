@@ -13,7 +13,7 @@ import java.io.PrintWriter;
     @version 2/8/18
  **/
 
-public class Login extends HttpServlet {
+public class CreateUser extends HttpServlet {
 
     public void service(HttpServletRequest req, HttpServletResponse res)
     throws ServletException, IOException {
@@ -29,10 +29,9 @@ public class Login extends HttpServlet {
         if (isLoggedIn) {
             out.println("<p>" + session.getAttribute("username") + "</p><br>");
         }
-        out.println("<form class=\"\" action=\" " + req.getContextPath() + "/ctrl/login?page=loginResult\" method=\"post\">" +
+        out.println("<form class=\"\" action=\" " + req.getContextPath() + "/ctrl/login?page=login\" method=\"post\">" +
                     "<input type=\"text\" name=\"username\" placeholder=\"username\" required>" +
                     "<input type=\"text\" name=\"password\" placeholder=\"password\" required>" +
                     "<button type=\"submit\" name=\"button\">Login</button></form></body></html>");
-        res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
     }
 }

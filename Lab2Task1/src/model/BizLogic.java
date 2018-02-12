@@ -18,11 +18,7 @@ public class BizLogic {
 	public static RepositoryStory storyDB;
 
  	public void init() {
-		System.out.println("initializing BizLogic");
-		this.mongo = new MongoClient("localhost", 27017);
-		this.db = this.mongo.getDB("NNSDB");						// new story site DB
-		this.userDB = new RepositoryUser(this.mongo, this.db);
-		this.storyDB = new RepositoryStory(this.mongo, this.db);
+		System.out.println("initializing BizLogic init");
 	}
 
 	public void destroy() {
@@ -31,13 +27,32 @@ public class BizLogic {
 		System.out.println("closing BizLogic");
 	}
 
+	public BizLogic() {
+		System.out.println("initializing BizLogic");
+		this.mongo = new MongoClient("localhost", 27017);
+		this.db = this.mongo.getDB("NNSDB");						// new story site DB
+		this.userDB = new RepositoryUser(this.mongo, this.db);
+		this.storyDB = new RepositoryStory(this.mongo, this.db);
+
+		userDB.createUser(new User("admin", "Administrator", "password", UserRoles.Admin));
+	}
+
 
     /**
         TODO implement
         NOTE This will interact with database
     **/
     public static boolean login(String username, String password) {
-		if (username.equals("username") && password.equals("password")) {
+		password = PassHash.hash(password);
+		String usr = "";
+		String pass = "";
+		User user = userDB.readUser(username);
+		if (user != null) {
+			System.out.println("user logged in :" + username);
+			usr = user.getUserName();
+			pass = user.getPassHash();
+		}
+		if (username.equals(usr) && password.equals(pass)) {
 			return true;
 		} else {
 			return false;
@@ -56,7 +71,19 @@ public class BizLogic {
         NOTE All usernames should be unique
         NOTE Roles: guest, Subcriber, Reporter
     */
-    public static String getRole(String username) {
-        return "guest";
+    public static UserRoles getRole(String username) {
+		User user = userDB.readUser(username);
+		if (user != null) {
+			System.out.println("not guest");
+			return user.getRole();
+		} else {
+			System.out.println("guest");
+			return UserRoles.Guest;
+		}
     }
+
+	/*public static User getUser(String username) {
+		User user = userDB.readUser(username);
+		return user;
+	}*/
 }

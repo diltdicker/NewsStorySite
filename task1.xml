@@ -40,6 +40,16 @@
     </servlet>
 
     <servlet>
+        <servlet-name>EditStoryView</servlet-name>
+        <servlet-class>EditStory</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AddStoryView</servlet-name>
+        <servlet-class>EditStory</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>ErrorView</servlet-name>
         <servlet-class>Error</servlet-class>
     </servlet>
@@ -77,6 +87,16 @@
     <servlet-mapping>
         <servlet-name>NewUserView</servlet-name>
         <url-pattern>/newUser</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EditStoryView</servlet-name>
+        <url-pattern>/editStory</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AddStoryView</servlet-name>
+        <url-pattern>/addStory</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

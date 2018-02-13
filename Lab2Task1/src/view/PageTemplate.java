@@ -39,7 +39,7 @@ public class PageTemplate {
         return article;
     }
 
-    public static String printNavbar(boolean isLoggedIn, boolean isReporter, String username, String homeUrl, String newStoryUrl, String loginUrl, String logoutUrl) {
+    public static String printNavbar(boolean isLoggedIn, boolean isReporter, String username, String homeUrl, String newStoryUrl, String loginUrl, String logoutUrl, String role) {
         String navbar = "<div class=\"navbar\"><ul><li><a href="+homeUrl+">Home</a></li>";
         if (isLoggedIn && isReporter) {
             navbar += "<li><a href="+newStoryUrl+">New Story</a></li>";
@@ -47,6 +47,7 @@ public class PageTemplate {
         if (isLoggedIn) {
             navbar += "<li><a href="+logoutUrl+">Logout</a></li>";
             navbar += "<li>"+username+"</li>";
+            navbar += "<li>"+role+"</li>";
         } else {
             navbar += "<li><a href="+loginUrl+">Login</a></li>";
         }
@@ -54,7 +55,7 @@ public class PageTemplate {
         return navbar;
     }
 
-    public static String paintEditArticle(String username, String title, boolean isSubscriberOnly, String content, String url) {
+    public static String printEditArticle(String username, String title, boolean isSubscriberOnly, String content, String url) {
         String area = "<hr>" +
         "<form class=\"form\" action="+url+" method=\"post\">" +
             "<input type=\"text\" name=\"title\" placeholder="+title+" required>" +
@@ -71,15 +72,15 @@ public class PageTemplate {
         return area;
     }
 
-    public static String paintAddArticle(String username, String url) {
+    public static String printAddArticle(String username, String url) {
         String area = "<hr>" +
         "<form class=\"form\" action="+url+" method=\"post\">" +
             "<input type=\"text\" name=\"title\" placeholder=\"title\" required>" +
             "<br>" +
             "<label name=\"author\">Author: "+username+"</label>" +
             "<br>" +
-            "<label for=\"isSubscriberOnly\">Is Subcriber Only: </label>" +
-            "<input type=\"checkbox\" name=\"isSubscriberOnly\" value=\"true\">" +
+            "<label for=\"subscriberOnly\">Is Subcriber Only: </label>" +
+            "<input type=\"checkbox\" name=\"subscriberOnly\" value=\"true\">" +
             "<br>" +
             "<textarea name=\"content\" cols=\"50\" rows=\"10\"></textarea>" +
             "<br>" +
@@ -107,6 +108,7 @@ public class PageTemplate {
             "<select class=\"select\" name=\"role\">"+
                 "<option value=\"Subscriber\" selected>Subscriber</option>"+
                 "<option value=\"Reporter\">Reporter</option>"+
+                "<option value=\"Admin\">Admin</option>"+
             "</select><br>"+
             "<button type=\"submit\" name=\"button\">Submit</button>"+
         "</form>";
@@ -115,8 +117,8 @@ public class PageTemplate {
 
     public static String printLoginForm(String url) {
         String form = "<form class=\"form\" action="+url+" method=\"post\">"+
-            "<input type=\"text\" name=\"username\" placeholder=\"username\" required>"+
-            "<input type=\"text\" name=\"password\" placeholder=\"password\" required>"+
+            "<input type=\"text\" name=\"username\" placeholder=\"username\" required><br>"+
+            "<input type=\"password\" name=\"password\" placeholder=\"password\" required>"+
             "<button type=\"submit\" name=\"button\">Login</button>"+
         "</form>";
         return form;

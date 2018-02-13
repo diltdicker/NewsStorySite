@@ -4,6 +4,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
+import java.util.ArrayList;
 
 /**
     @author Dillon Dickerson
@@ -34,6 +35,14 @@ public class BizLogic {
 		this.userDB = new RepositoryUser(this.mongo, this.db);
 		this.storyDB = new RepositoryStory(this.mongo, this.db);
 
+
+		ArrayList<Story> allStories = this.storyDB.getAllStories(false);
+		for (int i = 0; i < allStories.size(); i++) {
+			if (allStories.get(i).getPostID() > this.storyDB.lastPostID) {
+				this.storyDB.lastPostID = allStories.get(i).getPostID();
+			}
+		}
+		System.out.println("LAST POST ID: " + this.storyDB.lastPostID);
 		//userDB.createUser(new User("admin", "Administrator", "11297115115119111114100", UserRoles.Admin));		//password = password
 	}
 
@@ -109,6 +118,31 @@ public class BizLogic {
 			}
 			String passHash = PassHash.hash(rawPass);
 			userDB.createUser(new User(username, name, passHash, role));
+			return true;
+		}
+	}
+
+	public static int getNextPostID() {
+		return storyDB.getNewPostID();
+	}
+
+	public static boolean storyExists(int postID) {
+		System.out.println("BizLogic storyExists");
+		if (null != storyDB.readStory(postID)) {
+			System.out.println("story exists");
+			return true;
+		} else {
+			System.out.println("story does not exist");
+			return false;
+		}
+	}
+
+	public static boolean createStory(String title, String author, int postID, String content, boolean subscriberOnly) {
+		if (storyExists(postID)) {
+			return false;
+		} else {
+			System.out.println("BizLogic create story");
+			storyDB.createStory(new Story(author, title, content, subscriberOnly, postID));
 			return true;
 		}
 	}

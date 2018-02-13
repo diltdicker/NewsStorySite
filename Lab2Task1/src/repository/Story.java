@@ -19,14 +19,15 @@ import java.util.ArrayList;
      private boolean subscriberOnly;
      private ArrayList<String> subscriberList;
 
-     public Story(String author, String title, String content, boolean subscriberOnly) {
+     public Story(String author, String title, String content, boolean subscriberOnly, int postID) {
          this.author = author;
          this.title = title;
          this.content = content;
          this.subscriberOnly = subscriberOnly;
          this.subscriberList = new ArrayList();
-         this.postID = -1;
-         // inital creation doesnot include a Subscriber nor postID
+         this.postID = postID;
+         System.out.println("TITLE: " + this.title);
+         // inital creation doesnot include a Subscriber list
      }
 
      public Story(String bson) {

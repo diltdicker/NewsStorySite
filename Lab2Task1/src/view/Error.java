@@ -19,10 +19,9 @@ public class Error extends HttpServlet {
     throws ServletException, IOException {
 
         HttpSession session = req.getSession();
-        String url = "/Lab2Task1";
+        String url = req.getContextPath();
         PrintWriter out = res.getWriter();
-        out.println("<!DOCTYPE><html><body>Error Code " + res.getStatus() +
-        "");
+        out.println("<html><body>Error Code " + res.getStatus());
         out.println("<a href=" + url + ">Home</a><br>" + req.getServletPath() + "</body></html>");
     }
 }

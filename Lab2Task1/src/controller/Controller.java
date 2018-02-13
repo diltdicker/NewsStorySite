@@ -31,7 +31,7 @@ public class Controller extends HttpServlet {
     }
 
     public static Pages handle;
-    final private static String[] pageList = {"/index", "/login", "/edit", "/delete", "/edit", "/loginResult", "/article",
+    final private static String[] pageList = {"/index", "/login", "/editStory", "/delete", "/addStory", "/loginResult", "/article",
         "/newUser"};
 
     public void init() throws ServletException {
@@ -62,7 +62,6 @@ public class Controller extends HttpServlet {
             }
             case EDIT: {
                 page = pageList[2];
-                session.setAttribute("pageAction", Pages.EDIT);
                 break;
             }
             case DELETE: {
@@ -71,7 +70,6 @@ public class Controller extends HttpServlet {
             }
             case ADD: {
                 page = pageList[4];
-                session.setAttribute("pageAction", Pages.ADD);
                 break;
             }
             case LOGINRESULT: {
@@ -147,9 +145,83 @@ public class Controller extends HttpServlet {
                 break;
             }
             case "editStory":{
+                if (null != session.getAttribute("isLoggedIn")) {
+                    boolean isLoggedIn = (boolean) session.getAttribute("isLoggedIn");
+                    if(isLoggedIn) {
+                        String role = (String) session.getAttribute("role");
+                        System.out.println("role:" + role);
+                        if (role.equals("Reporter") || role.equals("Admin")) {
+                            session.setAttribute("pageAction", "");
+                            handle = Pages.VIEW;
+                            res.setStatus(200);
+                        } else {
+                            handle = Pages.ERROR;
+                            res.setStatus(401);
+                        }
+                    } else {
+                        handle = Pages.ERROR;
+                        res.setStatus(401);
+                    }
+                } else {
+                    handle = Pages.ERROR;
+                    res.setStatus(401);
+                }
                 break;
             }
             case "addStory":{
+                if (null != session.getAttribute("isLoggedIn")) {
+                    boolean isLoggedIn = (boolean) session.getAttribute("isLoggedIn");
+                    if(isLoggedIn) {
+                        String role = (String) session.getAttribute("role");
+                        System.out.println("role:" + role);
+                        if (role.equals("Reporter") || role.equals("Admin")) {
+                            session.setAttribute("pageAction", "");
+                            handle = Pages.INDEX;
+                            // add Story here
+                            try {
+                                res.setStatus(200);
+                                int postID = bizLogicCtrl.getNextPostID();
+
+                                String title = (String) req.getParameter("title");
+                                System.out.println("title "+title);
+
+                                String content = (String) req.getParameter("content");
+                                System.out.println("content "+content);
+
+                                String subscriberOnlyStr = "false";
+                                if (null != req.getParameter("subscriberOnly")) {
+                                    subscriberOnlyStr = (String) req.getParameter("subscriberOnly");
+                                }
+                                System.out.println("subscriberOnly "+subscriberOnlyStr);
+
+                                String username = (String) session.getAttribute("username");
+                                System.out.println("username: "+username);
+                                boolean subscriberOnly = false;
+                                if (subscriberOnlyStr.equals("true")) {
+                                    subscriberOnly = true;
+                                }
+                                if (bizLogicCtrl.createStory(title, username, postID, content, subscriberOnly)) {
+                                    // Sucsses
+                                    System.out.println("Story created");
+                                } else {
+                                    handle = Pages.ERROR;
+                                    res.setStatus(400);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            handle = Pages.ERROR;
+                            res.setStatus(401);
+                        }
+                    } else {
+                        handle = Pages.ERROR;
+                        res.setStatus(401);
+                    }
+                } else {
+                    handle = Pages.ERROR;
+                    res.setStatus(401);
+                }
                 break;
             }
             case "deleteStory":{
@@ -223,9 +295,53 @@ public class Controller extends HttpServlet {
                 break;
             }
             case "editStory":{
+                if (null != session.getAttribute("isLoggedIn")) {
+                    boolean isLoggedIn = (boolean) session.getAttribute("isLoggedIn");
+                    if(isLoggedIn) {
+                        String role = (String) session.getAttribute("role");
+                        System.out.println("role:" + role);
+                        if (role.equals("Reporter") || role.equals("Admin")) {
+                            session.setAttribute("pageAction", "Edit");
+                            // get article attributes
+                            int postID = Integer.parseInt(req.getParameter("postID"));
+                            handle = Pages.EDIT;
+                            res.setStatus(200);
+                        } else {
+                            handle = Pages.ERROR;
+                            res.setStatus(401);
+                        }
+                    } else {
+                        handle = Pages.ERROR;
+                        res.setStatus(401);
+                    }
+                } else {
+                    handle = Pages.ERROR;
+                    res.setStatus(401);
+                }
                 break;
             }
             case "addStory":{
+                if (null != session.getAttribute("isLoggedIn")) {
+                    boolean isLoggedIn = (boolean) session.getAttribute("isLoggedIn");
+                    if(isLoggedIn) {
+                        String role = (String) session.getAttribute("role");
+                        System.out.println("role:" + role);
+                        if (role.equals("Reporter") || role.equals("Admin")) {
+                            session.setAttribute("pageAction", "Add");
+                            handle = Pages.ADD;
+                            res.setStatus(200);
+                        } else {
+                            handle = Pages.ERROR;
+                            res.setStatus(401);
+                        }
+                    } else {
+                        handle = Pages.ERROR;
+                        res.setStatus(401);
+                    }
+                } else {
+                    handle = Pages.ERROR;
+                    res.setStatus(401);
+                }
                 break;
             }
             case "deleteStory":{

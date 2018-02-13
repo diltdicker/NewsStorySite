@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
     public static MongoClient mongo;
     public static DB db;
-    private static int lastPostID;
+    public static int lastPostID;
     private static DBCollection storyTable;
 
     public RepositoryStory(MongoClient mongo, DB db) {
@@ -29,7 +29,7 @@ import java.util.ArrayList;
         boolean status = true;
         try {
             BasicDBObject storyDoc = new BasicDBObject();
-			storyDoc.put("postID", ++lastPostID);
+			storyDoc.put("postID", story.getPostID());
             storyDoc.put("author", story.getAuthor());
             storyDoc.put("title", story.getTitle());
             storyDoc.put("content", story.getContent());
@@ -96,6 +96,33 @@ import java.util.ArrayList;
         }
     }
 
+    public static int getNewPostID() {
+        return ++lastPostID;
+    }
 
+    public static ArrayList<Story> getAllStories(boolean nosubscriberOnly) {
+        System.out.println("GET ALL STORIES");
+        ArrayList<Story> storyList = new ArrayList();
+        BasicDBObject query = new BasicDBObject();
+        BasicDBObject params = new BasicDBObject();
+        params.put("subscriberOnly", false);
+        query.put("$eq", params);
+        DBCursor cursor;
+        if (nosubscriberOnly) {
+            cursor = storyTable.find(params);
+        } else {
+            cursor = storyTable.find();
+        }
+        while (cursor.hasNext()) {
+            storyList.add(new Story(cursor.next().toString()));
+            System.out.println("SEARCH -- " + storyList.size());
+        }
+        cursor.close();
+        return storyList;
+    }
 
+    public static ArrayList<Story> getSubscriberStories(String username) {
+        ArrayList<Story> storyList = new ArrayList();
+        return storyList;
+    }
  }

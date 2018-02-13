@@ -27,13 +27,13 @@ public class PageTemplate {
                 "<p>" + content + "</p>" +
             "</div>" +
             "<div class=\"options\">" +
-                "<form class=\"form\" action=" + url + " method=\"post\">" +
+                "<form class=\"form\" action=" + url + " method=\"GET\">" +
                 "<label name=\"postID\" value="+postID+">PostID: "+postID+"</label>";
         if (role == UserRoles.Subscriber) {
-            article += "<input type=\"submit\" name=\"articleAction\" value=\"favorite==" + postID + "\">";
+            article += "<button type=\"submit\" name=\""+url+"articleAction\" value=\"Subscribe\">Subcribe</button>";
         } else if (role == UserRoles.Reporter || role == UserRoles.Admin) {
-            article += "<input type=\"submit\" name=\"edit\" value=\"" + postID + "\">";
-            article += "<input type=\"submit\" name=\"delete\" value=\"" + postID +"\">";
+            article += "<br><button type=\"submit\" name=\""+url+"articleAction\" value=\"Edit\">Edit</button>";
+            article += "<button type=\"submit\" name=\""+url+"articleAction\" value=\"Delete\">Delete</button>";
         }
         article += "</form></div></div>";
         return article;

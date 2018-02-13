@@ -150,12 +150,15 @@ public class Controller extends HttpServlet {
                 if (null != session.getAttribute("isLoggedIn")) {
                     boolean isLoggedIn = (boolean) session.getAttribute("isLoggedIn");
                     if(isLoggedIn) {
+                        String username = (String) session.getAttribute("username");
                         String role = (String) session.getAttribute("role");
                         System.out.println("role:" + role);
                         if (role.equals("Reporter") || role.equals("Admin")) {
                             session.setAttribute("pageAction", "");
                             handle = Pages.VIEW;
                             res.setStatus(200);
+                        } else if (role.equals("Subscriber")) {
+
                         } else {
                             handle = Pages.ERROR;
                             res.setStatus(401);
@@ -307,15 +310,33 @@ public class Controller extends HttpServlet {
                     if(isLoggedIn) {
                         String role = (String) session.getAttribute("role");
                         System.out.println("role:" + role);
+                        int postID = Integer.parseInt(req.getParameter("postID"));
+                        String username = (String) session.getAttribute("username");
                         if (role.equals("Reporter") || role.equals("Admin")) {
-                            session.setAttribute("pageAction", "Edit");
-                            // get article attributes
-                            int postID = Integer.parseInt(req.getParameter("postID"));
-                            handle = Pages.EDIT;
-                            res.setStatus(200);
-                        } else {
-                            handle = Pages.ERROR;
-                            res.setStatus(401);
+                            if (req.getParameter("articleAction") != null) {
+                                String action = (String) req.getParameter("articleAction");
+                                if (action.equals("Edit")) {
+                                    handle = Pages.EDIT;
+                                } else if (action.equals("Delete")) {
+                                    bizLogicCtrl.removeStory(postID);
+                                    handle = Pages.INDEX;
+                                    res.setStatus(200);
+                                } else {
+                                    handle = Pages.INDEX;
+                                    res.setStatus(200);
+                                }
+                            }
+                        } else if (role.equals("Subscriber")) {
+                            if (req.getParameter("articleAction") != null) {
+                                String action = (String) req.getParameter("articleAction");
+                                if (action.equals("Subscribe")) {
+                                    Story story = bizLogicCtrl.getStory(postID);
+                                    story.addSubscriberList(username);
+                                } else {
+                                    handle = Pages.INDEX;
+                                    res.setStatus(200);
+                                }
+                            }
                         }
                     } else {
                         handle = Pages.ERROR;

@@ -28,7 +28,7 @@ public class Home extends HttpServlet {
         String homeUrl = req.getContextPath();
         boolean isLoggedIn = false;
         boolean isReporter = false;
-        String username = "username";
+        String username = "";
         String role = "Guest";
         if (null != session.getAttribute("isLoggedIn")) {
             isLoggedIn = (boolean) session.getAttribute("isLoggedIn");
@@ -57,7 +57,45 @@ public class Home extends HttpServlet {
                 out.println(PageTemplate.printTitle((req.getContextPath()+"/ctrl/?page=article&postID=" + postID), title, author));
             }
         } else {
-            
+            if (role.equals("Subscriber")) {
+                ArrayList<Story> allsStoryList = Controller.bizLogicCtrl.getAllStories(true);
+                ArrayList<Story> subStoryList = Controller.bizLogicCtrl.getSubscriberStories(username);
+                ArrayList<Integer> usedPostIDs = new ArrayList();
+                for (int i=0; i < subStoryList.size(); i++) {
+                    String title = subStoryList.get(i).getTitle();
+                    int postID = subStoryList.get(i).getPostID();
+                    String author = subStoryList.get(i).getAuthor();
+                    usedPostIDs.add(postID);
+                    out.println(PageTemplate.printTitle((req.getContextPath()+"/ctrl/?page=article&postID=" + postID), title, author));
+                }
+                for (int i=0; i < allsStoryList.size(); i++) {
+                    if (usedPostIDs.indexOf(allsStoryList.get(i).getPostID()) == -1) {
+                        String title = allsStoryList.get(i).getTitle();
+                        int postID = allsStoryList.get(i).getPostID();
+                        String author = allsStoryList.get(i).getAuthor();
+                        out.println(PageTemplate.printTitle((req.getContextPath()+"/ctrl/?page=article&postID=" + postID), title, author));
+                    }
+                }
+            } else if ((role.equals("Reporter") || role.equals("Admin"))) {
+                ArrayList<Story> allsStoryList = Controller.bizLogicCtrl.getAllStories(true);
+                ArrayList<Story> subStoryList = Controller.bizLogicCtrl.getAuthorStories(username);
+                ArrayList<Integer> usedPostIDs = new ArrayList();
+                for (int i=0; i < subStoryList.size(); i++) {
+                    String title = subStoryList.get(i).getTitle();
+                    int postID = subStoryList.get(i).getPostID();
+                    String author = subStoryList.get(i).getAuthor();
+                    usedPostIDs.add(postID);
+                    out.println(PageTemplate.printTitle((req.getContextPath()+"/ctrl/?page=article&postID=" + postID), title, author));
+                }
+                for (int i=0; i < allsStoryList.size(); i++) {
+                    if (usedPostIDs.indexOf(allsStoryList.get(i).getPostID()) == -1) {
+                        String title = allsStoryList.get(i).getTitle();
+                        int postID = allsStoryList.get(i).getPostID();
+                        String author = allsStoryList.get(i).getAuthor();
+                        out.println(PageTemplate.printTitle((req.getContextPath()+"/ctrl/?page=article&postID=" + postID), title, author));
+                    }
+                }
+            }
         }
         out.println("</body>");
 

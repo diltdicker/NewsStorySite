@@ -43,6 +43,11 @@ public class BizLogic {
 			}
 		}
 		System.out.println("LAST POST ID: " + this.storyDB.lastPostID);
+		try {
+			storyDB.getSubscriberStories("dtdicker");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 		//userDB.createUser(new User("admin", "Administrator", "11297115115119111114100", UserRoles.Admin));		//password = password
 	}
 
@@ -153,5 +158,17 @@ public class BizLogic {
 
 	public static Story getStory(int postID) {
 		return storyDB.readStory(postID);
+	}
+
+	public static ArrayList<Story> getSubscriberStories(String username) {
+		return storyDB.getSubscriberStories(username);
+	}
+
+	public static ArrayList<Story> getAuthorStories(String username) {
+		return storyDB.getAuthorStories(username);
+	}
+
+	public static boolean removeStory(int postID) {
+		return storyDB.deleteStory(postID);
 	}
 }

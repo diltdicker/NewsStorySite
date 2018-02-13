@@ -49,11 +49,11 @@ public class ViewArticle extends HttpServlet {
         out.println(PageTemplate.printNavbar(isLoggedIn, isReporter, username, homeUrl, newStoryUrl, loginUrl, logoutUrl, role));
         // Print articles here
         if (role.equals("Subscriber")) {
-            out.println(PageTemplate.printArticle(story.getPostID(), story.getTitle(), story.getContent(), story.getAuthor(), UserRoles.Subscriber, req.getContextPath()+"/ctrl/?page=edit"));
+            out.println(PageTemplate.printArticle(story.getPostID(), story.getTitle(), story.getContent(), story.getAuthor(), UserRoles.Subscriber, req.getContextPath()+"/ctrl/?page=edit&postID="+req.getParameter("postID")));
         } else if ((role.equals("Reporter") || role.equals("Admin")) && story.getAuthor().equals(username)) {
-            out.println(PageTemplate.printArticle(story.getPostID(), story.getTitle(), story.getContent(), story.getAuthor(), UserRoles.Reporter, req.getContextPath()+"/ctrl/?page=edit"));
+            out.println(PageTemplate.printArticle(story.getPostID(), story.getTitle(), story.getContent(), story.getAuthor(), UserRoles.Reporter, req.getContextPath()+"/ctrl/?page=edit&postID="+req.getParameter("postID")));
         } else {
-            out.println(PageTemplate.printArticle(story.getPostID(), story.getTitle(), story.getContent(), story.getAuthor(), UserRoles.Guest, req.getContextPath()+"/ctrl/?page=edit"));
+            out.println(PageTemplate.printArticle(story.getPostID(), story.getTitle(), story.getContent(), story.getAuthor(), UserRoles.Guest, req.getContextPath()+"/ctrl/?page=edit&postID="+req.getParameter("postID")));
         }
         out.println("</body>");
 

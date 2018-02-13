@@ -1,4 +1,5 @@
 import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBList;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -122,7 +123,38 @@ import java.util.ArrayList;
     }
 
     public static ArrayList<Story> getSubscriberStories(String username) {
+        System.out.println("GET Subscriber STORIES");
         ArrayList<Story> storyList = new ArrayList();
+        try {
+            BasicDBObject query = new BasicDBObject();
+            BasicDBObject params = new BasicDBObject();
+            BasicDBList list = new BasicDBList();
+            list.put(0, username);
+            params.put("$in", list);
+            query.put("subscriberList", params);
+            DBCursor cursor = storyTable.find(query);
+            while (cursor.hasNext()) {
+                storyList.add(new Story(cursor.next().toString()));
+                System.out.println("SEARCH -- " + storyList.size());
+            }
+            cursor.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return storyList;
+    }
+
+    public static ArrayList<Story> getAuthorStories(String username) {
+        System.out.println("GET Author STORIES");
+        ArrayList<Story> storyList = new ArrayList();
+        BasicDBObject query = new BasicDBObject();
+        query.put("author", username);
+        DBCursor cursor = storyTable.find(query);
+        while (cursor.hasNext()) {
+            storyList.add(new Story(cursor.next().toString()));
+            System.out.println("SEARCH -- " + storyList.size());
+        }
+        cursor.close();
+        return  storyList;
     }
  }

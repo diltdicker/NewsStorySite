@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 /**
     @author Dillon Dickerson
@@ -47,6 +48,17 @@ public class Home extends HttpServlet {
         out.println("<body>");
         out.println(PageTemplate.printNavbar(isLoggedIn, isReporter, username, homeUrl, newStoryUrl, loginUrl, logoutUrl, role));
         // Print articles here
+        if (role.equals("Guest")) {
+            ArrayList<Story> storyList = Controller.bizLogicCtrl.getAllStories(true);
+            for (int i = 0; i < storyList.size(); i++) {
+                String title = storyList.get(i).getTitle();
+                int postID = storyList.get(i).getPostID();
+                String author = storyList.get(i).getAuthor();
+                out.println(PageTemplate.printTitle((req.getContextPath()+"/ctrl/?page=article&postID=" + postID), title, author));
+            }
+        } else {
+            
+        }
         out.println("</body>");
 
         out.println("</html>");

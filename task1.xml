@@ -50,6 +50,11 @@
     </servlet>
 
     <servlet>
+        <servlet-name>ArticleView</servlet-name>
+        <servlet-class>ViewArticle</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>ErrorView</servlet-name>
         <servlet-class>Error</servlet-class>
     </servlet>
@@ -97,6 +102,11 @@
     <servlet-mapping>
         <servlet-name>AddStoryView</servlet-name>
         <url-pattern>/addStory</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ArticleView</servlet-name>
+        <url-pattern>/article</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

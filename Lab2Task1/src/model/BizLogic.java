@@ -146,4 +146,12 @@ public class BizLogic {
 			return true;
 		}
 	}
+
+	public static ArrayList<Story> getAllStories(boolean nosubscriberOnly) {
+		return storyDB.getAllStories(nosubscriberOnly);
+	}
+
+	public static Story getStory(int postID) {
+		return storyDB.readStory(postID);
+	}
 }

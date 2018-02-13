@@ -82,7 +82,7 @@ import java.util.ArrayList;
          this.subscriberOnly = subscriberOnly;
      }
 
-     public ArrayList getSubscriberList() {
+     public ArrayList<String> getSubscriberList() {
          return this.subscriberList;
      }
 

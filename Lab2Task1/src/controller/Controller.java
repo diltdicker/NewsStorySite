@@ -12,6 +12,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 import java.io.IOException;
+import java.util.ArrayList;
 /**
     @author Dillon Dickerson
     @version 2/8/18
@@ -96,6 +97,7 @@ public class Controller extends HttpServlet {
                 break;
             }
             case VIEW: {
+                page = pageList[6];
                 break;
             }
             case NEWUSER :{
@@ -259,6 +261,11 @@ public class Controller extends HttpServlet {
 
                 break;
             }
+            case "article" : {
+                handle = Pages.ERROR;
+                res.setStatus(405);
+                break;
+            }
             default:{
                 handle = Pages.ERROR;
                 res.setStatus(404);
@@ -354,6 +361,50 @@ public class Controller extends HttpServlet {
             }
             case "newUser": {
                 handle = Pages.NEWUSER;
+                break;
+            }
+            case "article": {
+                if (req.getParameter("postID") != null) {
+                    try {
+                        int postID = Integer.parseInt(req.getParameter("postID"));
+                        if (bizLogicCtrl.storyExists(postID)) {
+                            // logic for credentials
+                            Story story = bizLogicCtrl.getStory(postID);
+                            String username = "";
+                            String author = story.getAuthor();
+                            if (null != session.getAttribute("username")) {
+                                username = (String) session.getAttribute("username");
+                            }
+                            if (story.getSubscriberOnly()) {
+                                ArrayList<String> subscriberList = story.getSubscriberList();
+                                if (subscriberList.indexOf(username) != -1) {
+                                    handle = Pages.VIEW;
+                                    res.setStatus(200);
+                                } else {
+                                    handle = Pages.ERROR;
+                                    res.setStatus(401);
+                                }
+                            } else {
+                                handle = Pages.VIEW;
+                                res.setStatus(200);
+                            }
+                            if (author.equals(username)) {
+                                handle = Pages.VIEW;
+                                res.setStatus(200);
+                            }
+                        } else {
+                            handle = Pages.ERROR;
+                            res.setStatus(404);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        handle = Pages.ERROR;
+                        res.setStatus(404);
+                    }
+                } else {
+                    handle = Pages.ERROR;
+                    res.setStatus(400);
+                }
                 break;
             }
             default:{

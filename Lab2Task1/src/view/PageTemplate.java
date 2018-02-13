@@ -20,7 +20,7 @@ public class PageTemplate {
         String article = "<div class=\"article\">" +
             "<div class=\"title\">" +
                 "<hr>" +
-                "<h3>title of article<h3>" +
+                "<h3>"+title+"<h3>" +
                 "<p>" + author + "</p>" +
             "</div>" +
             "<div class=\"story\">" +
@@ -32,8 +32,8 @@ public class PageTemplate {
         if (role == UserRoles.Subscriber) {
             article += "<input type=\"submit\" name=\"articleAction\" value=\"favorite==" + postID + "\">";
         } else if (role == UserRoles.Reporter || role == UserRoles.Admin) {
-            article += "<input type=\"submit\" name=\"articleAction\" value=\"edit==" + postID + "\">";
-            article += "<input type=\"submit\" name=\"articleAction\" value=\"delete==" + postID +"\">";
+            article += "<input type=\"submit\" name=\"edit\" value=\"" + postID + "\">";
+            article += "<input type=\"submit\" name=\"delete\" value=\"" + postID +"\">";
         }
         article += "</form></div></div>";
         return article;
